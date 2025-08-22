@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Building2, Calculator, FileText, Users, Wrench, Palette, ArrowRight } from 'lucide-react';
+import { Building2, Wrench, Palette, ArrowRight } from 'lucide-react';
 
 const Services = () => {
   const services = [
@@ -89,7 +89,7 @@ const Services = () => {
           className="text-center mt-20"
         >
           <p className="text-gray-400 font-light mb-8 max-w-2xl mx-auto">
-            Ready to transform your vision into reality? Let's discuss how we can help bring your project to life.
+            Ready to transform your vision into reality? Let&apos;s discuss how we can help bring your project to life.
           </p>
           <motion.button
             whileHover={{ scale: 1.05 }}

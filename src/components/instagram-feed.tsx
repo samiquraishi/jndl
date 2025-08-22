@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { Instagram, Building, Camera, Heart } from 'lucide-react';
-import Image from 'next/image';
 
 const instagramPosts = [
   { 

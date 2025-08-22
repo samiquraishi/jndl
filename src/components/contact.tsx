@@ -18,7 +18,7 @@ const Contact = () => {
             Get In Touch
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ready to start your next project? Contact us for a consultation and let's discuss how we can help bring your vision to life.
+            Ready to start your next project? Contact us for a consultation and let&apos;s discuss how we can help bring your vision to life.
           </p>
         </motion.div>
 

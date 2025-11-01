@@ -38,6 +38,11 @@ module.exports = {
           DEFAULT: "var(--accent)",
           foreground: "var(--accent-foreground)",
         },
+        gold: {
+          DEFAULT: "var(--gold)",
+          light: "#e8d492",
+          dark: "var(--gold-dark)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

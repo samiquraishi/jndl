@@ -176,7 +176,7 @@ export default function ProjectsGrid() {
             exit="hidden"
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10"
           >
-            {filteredProjects.map((project, index) => (
+            {filteredProjects.map((project) => (
               <motion.div
                 key={project.id}
                 variants={itemVariants}

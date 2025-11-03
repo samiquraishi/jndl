@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, CheckCircle2, Send } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface EnquiryModalProps {
@@ -15,11 +15,22 @@ export default function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
     fullName: "",
     email: "",
     phone: "",
-    service: "",
     projectDetails: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +48,6 @@ export default function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
         fullName: "",
         email: "",
         phone: "",
-        service: "",
         projectDetails: "",
       });
       setIsSubmitted(false);
@@ -66,36 +76,36 @@ export default function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-charcoal/80 backdrop-blur-sm z-50"
             onClick={onClose}
           />
 
           {/* Modal */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
+            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden relative border border-stone/50 flex flex-col">
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 transition-colors z-10"
+                className="absolute top-6 right-6 p-2 text-navy/60 hover:text-charcoal transition-colors z-10 rounded-lg hover:bg-stone/50"
               >
                 <X className="w-6 h-6" />
               </button>
 
               {/* Content */}
-              <div className="p-8 md:p-12">
+              <div className="p-8 md:p-12 overflow-y-auto flex-1 scrollbar-hide">
                 {/* Logo/Header */}
                 <div className="mb-8">
-                  <h2 className="text-3xl font-light tracking-wide text-gray-900 mb-2">
+                  <h2 className="text-3xl lg:text-4xl font-display font-semibold tracking-tight text-charcoal mb-3">
                     Start Your Project
                   </h2>
-                  <p className="text-gray-600 font-light">
+                  <p className="text-navy/70 font-light leading-relaxed">
                     Tell us about your project and we&apos;ll get back to you
                     shortly.
                   </p>
@@ -107,25 +117,22 @@ export default function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center py-12"
                   >
-                    <div className="w-16 h-16 bg-gold rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg
-                        className="w-8 h-8 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </div>
-                    <h3 className="text-2xl font-light text-gray-900 mb-2">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{
+                        delay: 0.2,
+                        type: "spring",
+                        stiffness: 200,
+                      }}
+                      className="w-20 h-20 bg-gold rounded-full flex items-center justify-center mx-auto mb-6"
+                    >
+                      <CheckCircle2 className="w-10 h-10 text-charcoal" />
+                    </motion.div>
+                    <h3 className="text-2xl lg:text-3xl font-display font-semibold text-charcoal mb-3">
                       Thank You!
                     </h3>
-                    <p className="text-gray-600 font-light">
+                    <p className="text-navy/70 font-light leading-relaxed">
                       We&apos;ll be in touch soon.
                     </p>
                   </motion.div>
@@ -134,7 +141,7 @@ export default function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
                     <div>
                       <label
                         htmlFor="fullName"
-                        className="block text-sm font-medium text-gray-700 mb-2"
+                        className="block text-sm font-medium text-charcoal mb-2"
                       >
                         Full Name *
                       </label>
@@ -145,89 +152,65 @@ export default function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
                         required
                         value={formData.fullName}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 border border-stone/50 rounded-lg focus:ring-2 focus:ring-gold focus:border-gold transition-all bg-white text-charcoal placeholder-navy/40 font-light"
                         placeholder="Your full name"
                       />
                     </div>
 
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent transition-all"
-                        placeholder="your.email@example.com"
-                      />
-                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label
+                          htmlFor="email"
+                          className="block text-sm font-medium text-charcoal mb-2"
+                        >
+                          Email Address *
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          required
+                          value={formData.email}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 border border-stone/50 rounded-lg focus:ring-2 focus:ring-gold focus:border-gold transition-all bg-white text-charcoal placeholder-navy/40 font-light"
+                          placeholder="your.email@example.com"
+                        />
+                      </div>
 
-                    <div>
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
-                        Phone Number *
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        required
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent transition-all"
-                        placeholder="+91 1234567890"
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="service"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
-                        Service of Interest *
-                      </label>
-                      <select
-                        id="service"
-                        name="service"
-                        required
-                        value={formData.service}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent transition-all"
-                      >
-                        <option value="">Select a service</option>
-                        <option value="project-management">
-                          Project Management
-                        </option>
-                        <option value="construction">Construction</option>
-                        <option value="architecture">Architecture</option>
-                        <option value="other">Other</option>
-                      </select>
+                      <div>
+                        <label
+                          htmlFor="phone"
+                          className="block text-sm font-medium text-charcoal mb-2"
+                        >
+                          Phone Number *
+                        </label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          required
+                          value={formData.phone}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 border border-stone/50 rounded-lg focus:ring-2 focus:ring-gold focus:border-gold transition-all bg-white text-charcoal placeholder-navy/40 font-light"
+                          placeholder="+91 1234567890"
+                        />
+                      </div>
                     </div>
 
                     <div>
                       <label
                         htmlFor="projectDetails"
-                        className="block text-sm font-medium text-gray-700 mb-2"
+                        className="block text-sm font-medium text-charcoal mb-2"
                       >
-                        Tell us about your project *
+                        Tell us about your project
                       </label>
                       <textarea
                         id="projectDetails"
                         name="projectDetails"
-                        required
                         rows={4}
                         value={formData.projectDetails}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent transition-all resize-none"
+                        className="w-full px-4 py-3 border border-stone/50 rounded-lg focus:ring-2 focus:ring-gold focus:border-gold transition-all resize-none bg-white text-charcoal placeholder-navy/40 font-light"
                         placeholder="Share details about your project requirements, timeline, budget, etc."
                       />
                     </div>
@@ -235,9 +218,16 @@ export default function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-gold text-gray-900 hover:bg-gold-dark font-light tracking-wide py-3 transition-all"
+                      className="w-full bg-gold text-charcoal hover:bg-gold-light font-medium tracking-wide py-6 text-base transition-all duration-300 rounded-lg shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      {isSubmitting ? "Sending..." : "Send Enquiry"}
+                      {isSubmitting ? (
+                        "Sending..."
+                      ) : (
+                        <>
+                          Send Enquiry
+                          <Send className="w-5 h-5" />
+                        </>
+                      )}
                     </Button>
                   </form>
                 )}

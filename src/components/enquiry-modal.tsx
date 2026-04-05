@@ -4,6 +4,11 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, Send } from "lucide-react";
 import { Button } from "./ui/button";
+import emailjs from "@emailjs/browser"; // 👈 add this
+
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
 
 interface EnquiryModalProps {
   isOpen: boolean;
@@ -37,10 +42,25 @@ export default function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
     setIsSubmitting(true);
 
     // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          full_name: formData.fullName,
+          to_email: formData.email,
+          phone: formData.phone,
+          project_details: formData.projectDetails,
+        },
+        EMAILJS_PUBLIC_KEY,
+      );
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("EmailJS error:", error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
 
     // Reset form after 3 seconds and close modal
     setTimeout(() => {
@@ -58,7 +78,7 @@ export default function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     setFormData((prev) => ({
       ...prev,

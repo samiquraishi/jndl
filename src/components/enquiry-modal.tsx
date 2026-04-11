@@ -41,11 +41,11 @@ export default function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
     try {
+      // Mail 1 — acknowledgement to customer
       await emailjs.send(
         EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_CUSTOMER!,
         {
           full_name: formData.fullName,
           to_email: formData.email,
@@ -54,25 +54,33 @@ export default function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
         },
         EMAILJS_PUBLIC_KEY,
       );
+
+      // Mail 2 — lead notification to Jindal Associates
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_INTERNAL!,
+        {
+          full_name: formData.fullName,
+          customer_email: formData.email,
+          phone: formData.phone,
+          project_details: formData.projectDetails,
+        },
+        EMAILJS_PUBLIC_KEY,
+      );
+
       setIsSubmitted(true);
+
+      setTimeout(() => {
+        setFormData({ fullName: "", email: "", phone: "", projectDetails: "" });
+        setIsSubmitted(false);
+        onClose();
+      }, 3000);
     } catch (error) {
       console.error("EmailJS error:", error);
       alert("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
-
-    // Reset form after 3 seconds and close modal
-    setTimeout(() => {
-      setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        projectDetails: "",
-      });
-      setIsSubmitted(false);
-      onClose();
-    }, 3000);
   };
 
   const handleChange = (
